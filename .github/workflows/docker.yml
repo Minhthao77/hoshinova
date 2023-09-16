@@ -20,7 +20,7 @@ jobs:
       uses: docker/metadata-action@v3
       with:
         images: |
-          ghcr.io/holoarchivists/hoshinova
+          ghcr.io/Minhthao77/hoshinova
         tags: |
           type=ref,event=branch
           type=ref,event=pr
