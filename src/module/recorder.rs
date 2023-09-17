@@ -478,7 +478,7 @@ impl YTAStatus {
         }
 
         // New versions of ytarchive prepend a timestamp to the output
-        let line = if self.version == Some("0.3.2".into())
+        let line = if self.version == Some("0.4.0".into())
             && line.len() > 20
             && line.chars().nth(4) == Some('/')
         {
@@ -498,7 +498,9 @@ impl YTAStatus {
             self.state = YTAState::Waiting(date);
         } else if line.starts_with("Stream is ") || line.starts_with("Waiting for stream") {
             self.state = YTAState::Waiting(None);
-        } else if line.starts_with("Muxing final file") {
+        } else if line.starts_with("Muxing final file")
+            || line.start_with("frame=")
+        {
             self.state = YTAState::Muxing;
         } else if line.starts_with("Livestream has been processed") {
             self.state = YTAState::AlreadyProcessed;
