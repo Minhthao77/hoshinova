@@ -499,7 +499,7 @@ impl YTAStatus {
         } else if line.starts_with("Stream is ") || line.starts_with("Waiting for stream") {
             self.state = YTAState::Waiting(None);
         } else if line.starts_with("Muxing final file")
-            || line.start_with("frame=")
+            || line.starts_with("frame=")
         {
             self.state = YTAState::Muxing;
         } else if line.starts_with("Livestream has been processed") {
