@@ -517,9 +517,7 @@ impl YTAStatus {
             warn!("Debug ytarchive output: {}", line);
         } else if line.contains("User Interrupt") {
             self.state = YTAState::Interrupted;
-        } else if line.contains("Error retrieving player response")
-            || line.contains("unable to retrieve")
-            || line.contains("error writing the muxcmd file")
+        } else if line.contains("error writing the muxcmd file")
             || line.contains("Something must have gone wrong with ffmpeg")
             || line.contains("At least one error occurred")
         {
