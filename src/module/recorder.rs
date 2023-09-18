@@ -184,6 +184,10 @@ impl YTArchive {
             if done.load(Ordering::Relaxed) {
                 break;
             }
+            
+            if status.state == YTAState::Finished {
+                break;
+            }
 
             trace!("{}[yta:out] {}", task_name, line);
 
@@ -452,10 +456,6 @@ impl YTAStatus {
         self.last_output = Some(line.to_string());
         self.last_update = chrono::Utc::now();
 
-        if self.state == YTAState::Finished {
-            return Ok(());
-        }
-
         if line.starts_with("Video Fragments: ") {
             self.state = YTAState::Recording;
             let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
@@ -521,9 +521,7 @@ impl YTAStatus {
             warn!("Debug ytarchive output: {}", line);
         } else if line.contains("User Interrupt") {
             self.state = YTAState::Interrupted;
-        } else if line.contains("Error retrieving player response")
-            || line.contains("unable to retrieve")
-            || line.contains("error writing the muxcmd file")
+        } else if line.contains("error writing the muxcmd file")
             || line.contains("Something must have gone wrong with ffmpeg")
             || line.contains("At least one error occurred")
         {
