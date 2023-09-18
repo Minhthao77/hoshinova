@@ -451,33 +451,36 @@ impl YTAStatus {
     pub fn parse_line(&mut self, line: &str) {
         self.last_output = Some(line.to_string());
         self.last_update = chrono::Utc::now();
-        
-        if self.state != YTAState::Finished{
-            if line.starts_with("Video Fragments: ") {
-                self.state = YTAState::Recording;
-                let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
-                if let Some(x) = parts.next() {
-                    self.video_fragments = x.trim().parse().ok();
-                };
-                if let Some(x) = parts.next() {
-                    self.audio_fragments = x.trim().parse().ok();
-                };
-                if let Some(x) = parts.next() {
-                    self.total_size = Some(strip_ansi(x.trim()));
-                };
-                return;
-            } else if line.starts_with("Audio Fragments: ") {
-                self.state = YTAState::Recording;
-                let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
-                if let Some(x) = parts.next() {
-                    self.audio_fragments = x.trim().parse().ok();
-                };
-                if let Some(x) = parts.next() {
-                    self.total_size = Some(strip_ansi(x.trim()));
-                };
-                return;
-            }
+
+        if self.state == YTAState::Finished {
+            return Ok(());
         }
+
+        if line.starts_with("Video Fragments: ") {
+            self.state = YTAState::Recording;
+            let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
+            if let Some(x) = parts.next() {
+                self.video_fragments = x.trim().parse().ok();
+            };
+            if let Some(x) = parts.next() {
+                self.audio_fragments = x.trim().parse().ok();
+            };
+            if let Some(x) = parts.next() {
+                self.total_size = Some(strip_ansi(x.trim()));
+            };
+            return;
+        } else if line.starts_with("Audio Fragments: ") {
+            self.state = YTAState::Recording;
+            let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
+            if let Some(x) = parts.next() {
+                self.audio_fragments = x.trim().parse().ok();
+            };
+            if let Some(x) = parts.next() {
+                self.total_size = Some(strip_ansi(x.trim()));
+            };
+            return;
+        }
+
         // New versions of ytarchive prepend a timestamp to the output
         let line = if self.version == Some("0.4.0".into())
             && line.len() > 20
@@ -518,7 +521,9 @@ impl YTAStatus {
             warn!("Debug ytarchive output: {}", line);
         } else if line.contains("User Interrupt") {
             self.state = YTAState::Interrupted;
-        } else if line.contains("error writing the muxcmd file")
+        } else if line.contains("Error retrieving player response")
+            || line.contains("unable to retrieve")
+            || line.contains("error writing the muxcmd file")
             || line.contains("Something must have gone wrong with ffmpeg")
             || line.contains("At least one error occurred")
         {
