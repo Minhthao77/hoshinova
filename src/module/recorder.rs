@@ -525,7 +525,7 @@ impl YTAStatus {
             || line.starts_with("Channel: ")
             || line.starts_with("Waiting for this time to elapse")
             || line.starts_with("Download Finished")
-            || line.start_with("frame=")
+            || line.starts_with("frame=")
         {
             // Ignore
         } else {
