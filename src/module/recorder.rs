@@ -451,32 +451,33 @@ impl YTAStatus {
     pub fn parse_line(&mut self, line: &str) {
         self.last_output = Some(line.to_string());
         self.last_update = chrono::Utc::now();
-
-        if line.starts_with("Video Fragments: ") {
-            self.state = YTAState::Recording;
-            let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
-            if let Some(x) = parts.next() {
-                self.video_fragments = x.trim().parse().ok();
-            };
-            if let Some(x) = parts.next() {
-                self.audio_fragments = x.trim().parse().ok();
-            };
-            if let Some(x) = parts.next() {
-                self.total_size = Some(strip_ansi(x.trim()));
-            };
-            return;
-        } else if line.starts_with("Audio Fragments: ") {
-            self.state = YTAState::Recording;
-            let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
-            if let Some(x) = parts.next() {
-                self.audio_fragments = x.trim().parse().ok();
-            };
-            if let Some(x) = parts.next() {
-                self.total_size = Some(strip_ansi(x.trim()));
-            };
-            return;
+        
+        if self.state != YTAState::Finished{
+            if line.starts_with("Video Fragments: ") {
+                self.state = YTAState::Recording;
+                let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
+                if let Some(x) = parts.next() {
+                    self.video_fragments = x.trim().parse().ok();
+                };
+                if let Some(x) = parts.next() {
+                    self.audio_fragments = x.trim().parse().ok();
+                };
+                if let Some(x) = parts.next() {
+                    self.total_size = Some(strip_ansi(x.trim()));
+                };
+                return;
+            } else if line.starts_with("Audio Fragments: ") {
+                self.state = YTAState::Recording;
+                let mut parts = line.split(';').map(|s| s.split(':').nth(1).unwrap_or(""));
+                if let Some(x) = parts.next() {
+                    self.audio_fragments = x.trim().parse().ok();
+                };
+                if let Some(x) = parts.next() {
+                    self.total_size = Some(strip_ansi(x.trim()));
+                };
+                return;
+            }
         }
-
         // New versions of ytarchive prepend a timestamp to the output
         let line = if self.version == Some("0.4.0".into())
             && line.len() > 20
