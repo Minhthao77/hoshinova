@@ -499,7 +499,6 @@ impl YTAStatus {
         } else if line.starts_with("Stream is ") || line.starts_with("Waiting for stream") {
             self.state = YTAState::Waiting(None);
         } else if line.starts_with("Muxing final file")
-            || line.starts_with("frame=")
         {
             self.state = YTAState::Muxing;
         } else if line.starts_with("Livestream has been processed") {
@@ -526,6 +525,7 @@ impl YTAStatus {
             || line.starts_with("Channel: ")
             || line.starts_with("Waiting for this time to elapse")
             || line.starts_with("Download Finished")
+            || line.start_with("frame=")
         {
             // Ignore
         } else {
