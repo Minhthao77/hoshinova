@@ -500,25 +500,19 @@ impl YTAStatus {
                 .ok()
                 .map(|d| d.into());
             self.state = YTAState::Waiting(date);
-            warn!("Debug ytarchive output: {}", line);
         } else if line.starts_with("Stream is ") || line.starts_with("Waiting for stream") {
             self.state = YTAState::Waiting(None);
-        } else if line.starts_with("Muxing final file")
-        {
+        } else if line.starts_with("Muxing final file") {
             self.state = YTAState::Muxing;
-            warn!("Debug ytarchive output: {}", line);
         } else if line.starts_with("Livestream has been processed") {
             self.state = YTAState::AlreadyProcessed;
-            warn!("Debug ytarchive output: {}", line);
         } else if line.starts_with("Livestream has ended and is being processed")
             || line.contains("use yt-dlp to download it.")
         {
             self.state = YTAState::Ended;
-            warn!("Debug ytarchive output: {}", line);
         } else if line.starts_with("Final file: ") {
             self.state = YTAState::Finished;
             self.output_file = Some(strip_ansi(&line[12..]));
-            warn!("Debug ytarchive output: {}", line);
         } else if line.contains("User Interrupt") {
             self.state = YTAState::Interrupted;
         } else if line.contains("Error retrieving player response")
@@ -528,13 +522,13 @@ impl YTAStatus {
             || line.contains("At least one error occurred")
         {
             self.state = YTAState::Errored;
-            warn!("Debug ytarchive output: {}", line);
         } else if line.trim().is_empty()
             || line.contains("Loaded cookie file")
             || line.starts_with("Video Title: ")
             || line.starts_with("Channel: ")
             || line.starts_with("Waiting for this time to elapse")
             || line.starts_with("Download Finished")
+            || line.starts_with("Retries:")
             || line.starts_with("frame=")
         {
             // Ignore
