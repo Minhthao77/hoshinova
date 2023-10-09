@@ -185,7 +185,8 @@ impl YTArchive {
                 break;
             }
             
-            if status.state == YTAState::Finished {
+            if status.state == YTAState::Finished 
+            || status.state == YTAState::Errored {
                 break;
             }
 
