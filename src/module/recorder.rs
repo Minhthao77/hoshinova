@@ -520,7 +520,7 @@ impl YTAStatus {
             || line.contains("error writing the muxcmd file")
             || line.contains("Something must have gone wrong with ffmpeg")
             || line.contains("At least one error occurred")
-            || line.contains("ERROR: The .ts files will not be deleted")
+            || line.contains("The .ts files will not be deleted")
         {
             self.state = YTAState::Errored;
         } else if line.trim().is_empty()
