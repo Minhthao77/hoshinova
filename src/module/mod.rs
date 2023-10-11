@@ -82,7 +82,7 @@ impl<'de> serde::Deserialize<'de> for TaskStatus {
             "recording" => Ok(TaskStatus::Recording),
             "done" => Ok(TaskStatus::Done),
             "failed" => Ok(TaskStatus::Failed),
-            "errored" => Ok(TaskStatus::Errored)
+            "errored" => Ok(TaskStatus::Errored),
             _ => Err(serde::de::Error::unknown_variant(
                 &s,
                 &["waiting", "recording", "done", "failed","errored"],
