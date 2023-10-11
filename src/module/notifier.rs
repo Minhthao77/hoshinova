@@ -87,7 +87,7 @@ impl Module for Discord {
                 TaskStatus::Recording => ("Recording", 0x58b9ff),
                 TaskStatus::Done => ("Done", 0x45eb45),
                 TaskStatus::Failed => ("Failed", 0xeb4545),
-                TaskStatus::Errored => ("Errored", 0xeb4545),
+                TaskStatus::TestCheck => ("TestCheck", 0xeb4545),
             };
             let timestamp = chrono::Utc::now().to_rfc3339();
 

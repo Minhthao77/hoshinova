@@ -53,7 +53,7 @@ pub enum TaskStatus {
     Recording,
     Done,
     Failed,
-    Errored,
+    TestCheck,
 }
 
 impl Serialize for TaskStatus {
@@ -66,7 +66,7 @@ impl Serialize for TaskStatus {
             TaskStatus::Recording => "recording",
             TaskStatus::Done => "done",
             TaskStatus::Failed => "failed",
-            TaskStatus::Errored => "errored",
+            TaskStatus::TestCheck => "test",
         })
     }
 }
@@ -82,10 +82,10 @@ impl<'de> serde::Deserialize<'de> for TaskStatus {
             "recording" => Ok(TaskStatus::Recording),
             "done" => Ok(TaskStatus::Done),
             "failed" => Ok(TaskStatus::Failed),
-            "errored" => Ok(TaskStatus::Errored),
+            "test" => Ok(TaskStatus::TestCheck),
             _ => Err(serde::de::Error::unknown_variant(
                 &s,
-                &["waiting", "recording", "done", "failed","errored"],
+                &["waiting", "recording", "done", "failed","test"],
             )),
         }
     }
