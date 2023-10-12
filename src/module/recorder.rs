@@ -358,9 +358,7 @@ impl Module for YTArchive {
                 match message {
                     Message::ToRecord(task) => {
                         // Check if the task is already active
-                        let recording_status = RecordingStatus.status.state.clone();
-                        if self.active_ids.read().await.contains(&task.video_id) 
-                        || recording_status == YTAState::Finished {
+                        if self.active_ids.read().await.contains(&task.video_id) {
                             warn!("Task {} is already active, skipping", task.video_id);
                             continue;
                         }
