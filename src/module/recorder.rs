@@ -530,6 +530,7 @@ impl YTAStatus {
             || line.contains("At least one error occurred")
             || line.contains("The .ts files will not be deleted")
         {
+            warn!("Ytarchive errored ouput: {}", line);
             self.state = YTAState::Errored;
         } else if line.trim().is_empty()
             || line.contains("Loaded cookie file")
