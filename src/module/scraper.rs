@@ -111,7 +111,7 @@ impl RSS {
                     debug!("Skipping {}: already scraped", entry.video_id);
                     return None;
                 } else if entry.updated < chrono::Utc::now() - updated_max_age {
-                    // Or if the video is too old
+                    // Or if the video updated date is too old
                     debug!(
                         "Skipping {}: too old ({} < {})",
                         entry.video_id,
@@ -120,7 +120,7 @@ impl RSS {
                     );
                     return None;
                 } else if entry.published < chrono::Utc::now() - pulbished_max_age {
-                    // Or if the video is too old
+                    // Or if the video published date is too old
                     debug!(
                         "Skipping {}: too old ({} < {})",
                         entry.video_id,
