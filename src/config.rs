@@ -42,7 +42,7 @@ pub struct ScraperConfig {
 
 #[derive(Clone, TS, Serialize, Deserialize, Debug)]
 #[ts(export, export_to = "web/src/bindings/")]
-pub struct ScraperRSSConfig1 {
+pub struct ScraperRSSConfig {
     #[serde(with = "humantime_serde")]
     #[ts(type = "string")]
     pub poll_interval: std::time::Duration,
