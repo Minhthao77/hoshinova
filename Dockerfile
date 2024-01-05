@@ -49,7 +49,7 @@ FROM alpine AS runner
 WORKDIR /app
 RUN set -ex; \
     apk add --no-cache ffmpeg wget unzip; \
-    wget -O /app/ytarchive.zip https://github.com/Kethsar/ytarchive/releases/download/v0.4.0/ytarchive_linux_amd64.zip; \
+    wget -O /app/ytarchive.zip https://github.com/Kethsar/ytarchive/releases/download/latest/ytarchive_linux_amd64.zip; \
     unzip /app/ytarchive.zip -d /usr/local/bin/; \
     rm /app/ytarchive.zip; \
     apk del wget unzip;
