@@ -33,6 +33,7 @@ struct FeedEntry {
     author: Author,
     group: MediaGroup,
     updated: chrono::DateTime<chrono::Utc>,
+    published:chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Deserialize)]
@@ -105,6 +106,15 @@ impl RSS {
                         entry.video_id,
                         entry.updated,
                         chrono::Utc::now() - max_age
+                    );
+                    return None;
+                } else if entry.published < chrono::Utc::now() - (max_age*7) {
+                    // Or if the video is too old
+                    debug!(
+                        "Skipping {}: too old ({} < {})",
+                        entry.video_id,
+                        entry.published,
+                        chrono::Utc::now() - (max_age*7)
                     );
                     return None;
                 } else if !channel.filters.iter().any(|filter| {
