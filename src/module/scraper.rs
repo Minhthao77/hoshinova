@@ -61,12 +61,23 @@ impl RSS {
         debug!("Fetching RSS for {}", channel.name);
 
         // Get config
-        let max_age =
-            chrono::Duration::from_std(self.config.read().await.scraper.rss.ignore_older_than)
-                .context("Failed to convert ignore_older_than to chrono::Duration")?;
+        let updated_max_age =
+            chrono::Duration::from_std(self.config.read().await.scraper.rss.ignore_updated_older_than)
+                .context("Failed to convert ignore_updated_older_than to chrono::Duration")?;
         debug!(
             "Ignoring videos older than {}",
-            max_age
+            updated_max_age
+                .to_std()
+                .map(humantime::format_duration)
+                .map(|s| s.to_string())
+                .unwrap_or_else(|_| "???".into())
+        );
+        let pulbished_max_age =
+            chrono::Duration::from_std(self.config.read().await.scraper.rss.ignore_published_older_than)
+                .context("Failed to convert ignore_published_older_than to chrono::Duration")?;
+        debug!(
+            "Ignoring videos older than {}",
+            pulbished_max_age
                 .to_std()
                 .map(humantime::format_duration)
                 .map(|s| s.to_string())
@@ -99,22 +110,22 @@ impl RSS {
                     // Skip if video has already been scraped
                     debug!("Skipping {}: already scraped", entry.video_id);
                     return None;
-                } else if entry.updated < chrono::Utc::now() - max_age {
+                } else if entry.updated < chrono::Utc::now() - updated_max_age {
                     // Or if the video is too old
                     debug!(
                         "Skipping {}: too old ({} < {})",
                         entry.video_id,
                         entry.updated,
-                        chrono::Utc::now() - max_age
+                        chrono::Utc::now() - updated_max_age
                     );
                     return None;
-                } else if entry.published < chrono::Utc::now() - (max_age*7) {
+                } else if entry.published < chrono::Utc::now() - pulbished_max_age {
                     // Or if the video is too old
                     debug!(
                         "Skipping {}: too old ({} < {})",
                         entry.video_id,
                         entry.published,
-                        chrono::Utc::now() - (max_age*7)
+                        chrono::Utc::now() - pulbished_max_age
                     );
                     return None;
                 } else if !channel.filters.iter().any(|filter| {

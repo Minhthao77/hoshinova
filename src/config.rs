@@ -47,13 +47,29 @@ pub struct ScraperRSSConfig {
     #[ts(type = "string")]
     pub poll_interval: std::time::Duration,
     #[serde(with = "humantime_serde")]
-    #[serde(default = "default_ignore_older_than")]
+    #[serde(default = "default_ignore_updated_older_than")]
     #[ts(type = "string")]
-    pub ignore_older_than: std::time::Duration,
+    pub ignore_updated_older_than: std::time::Duration,
 }
 
-fn default_ignore_older_than() -> std::time::Duration {
+fn default_ignore_updated_older_than() -> std::time::Duration {
     std::time::Duration::from_secs(60 * 60 * 24)
+}
+
+#[derive(Clone, TS, Serialize, Deserialize, Debug)]
+#[ts(export, export_to = "web/src/bindings/")]
+pub struct ScraperRSSConfig {
+    #[serde(with = "humantime_serde")]
+    #[ts(type = "string")]
+    pub poll_interval: std::time::Duration,
+    #[serde(with = "humantime_serde")]
+    #[serde(default = "default_ignore_published_older_than")]
+    #[ts(type = "string")]
+    pub ignore_published_older_than: std::time::Duration,
+}
+
+fn default_ignore_published_older_than() -> std::time::Duration {
+    std::time::Duration::from_secs(60 * 60 * 24 * 7)
 }
 
 #[derive(Clone, TS, Serialize, Deserialize, Debug)]
