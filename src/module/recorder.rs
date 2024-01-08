@@ -490,7 +490,7 @@ impl YTAStatus {
         }
 
         // New versions of ytarchive prepend a timestamp to the output
-        let line = if self.version == Some("0.4.0".into())
+        let line = if self.version == Some("0.4.0-77c2f5c".into())
             && line.len() > 20
             && line.chars().nth(4) == Some('/')
         {
