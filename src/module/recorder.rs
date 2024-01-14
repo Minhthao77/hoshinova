@@ -288,8 +288,10 @@ impl YTArchive {
         // Try to rename the file into the output directory
         if let Err(_) = fs::rename(frompath, &destpath) {
             debug!(
-                "{} Failed to rename file to output, trying to copy",
+                "{} Failed to rename file {} to output {}, trying to copy",
                 task_name,
+                frompath,
+                destpath.display(),
             );
 
             // Copy the file into the output directory
