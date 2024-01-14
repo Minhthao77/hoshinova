@@ -284,7 +284,6 @@ impl YTArchive {
             .file_name()
             .ok_or(anyhow!("Failed to get filename"))?;
         let destpath = Path::new(&task.output_directory).join(filename);
-        fs::rename(frompath, &destpath);
         // Try to rename the file into the output directory
         if let Err(_) = fs::rename(frompath, &destpath) {
             debug!(
