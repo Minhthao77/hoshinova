@@ -290,7 +290,7 @@ impl YTArchive {
             debug!(
                 "{} Failed to rename file {} to output {}, trying to copy",
                 task_name,
-                frompath,
+                frompath.display(),
                 destpath.display(),
             );
 
