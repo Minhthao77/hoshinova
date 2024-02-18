@@ -1,11 +1,13 @@
-#[macro_use]
-extern crate log;
 use crate::module::Module;
 use crate::msgbus::MessageBus;
 use anyhow::{anyhow, Result};
 use clap::Parser;
 use std::{process::Command, sync::Arc};
 use tokio::sync::RwLock;
+use std::io::Write;
+use chrono::Local;
+use env_logger::Builder;
+use log::{LevelFilter, *};
 
 mod config;
 mod module;
@@ -75,7 +77,19 @@ fn test_ytarchive(path: &str) -> Result<String> {
 #[tokio::main]
 async fn main() -> Result<()> {
     // Initialize logging
-    env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+    //env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+    Builder::new()
+        .format(|buf, record| {
+            writeln!(buf,
+                "{} [{}] - {}",
+                Local::now().format("%Y-%m-%dT%H:%M:%S"),
+                record.level(),
+                record.args()
+            )
+        })
+        .filter(None, LevelFilter::Info)
+        .init();
+    
     info!("{}", APP_NAME);
     debug!("Git hash: {}", env!("GIT_HASH"));
     debug!("Built on: {}", env!("BUILD_TIME"));
