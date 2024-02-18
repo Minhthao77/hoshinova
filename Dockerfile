@@ -57,12 +57,9 @@ RUN set -ex; \
 
 FROM alpine AS runner
 WORKDIR /app
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache ffmpeg tzdata
+ENV TZ
 COPY --from=ytarchive-builder /src/ytarchive/ytarchive /usr/local/bin/ytarchive
-
-FROM alpine AS timezone
-RUN apk add --no-cache tzdata
-ENV TZ America/New_York
 
 USER 1000
 COPY --from=rust-builder --chown=1000:1000 \
