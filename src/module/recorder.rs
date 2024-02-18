@@ -270,11 +270,6 @@ impl YTArchive {
         trace!("{} Process monitor exited: {:?}", task_name, r_wait);
         trace!("{} Stdout monitor quit: {:?}", task_name, r_stdout);
         trace!("{} Stderr monitor quit: {:?}", task_name, r_stderr);
-
-        // Remove video from active state if it failed
-        if status.state == YTAState::Errored {
-            active_ids.write().await.remove(&task.task.video_id);
-        }
         
         // Skip moving files if it didn't finish
         if status.state != YTAState::Finished {
@@ -347,6 +342,7 @@ impl Module for YTArchive {
                     active_ids.write().await.insert(video_id.clone());
 
                     if let Err(e) = YTArchive::record(task.cfg, task.task, &mut task.tx).await {
+                        active_ids.write().await.remove(&video_id);
                         error!("Failed to record task: {:?}", e);
                     };
 
