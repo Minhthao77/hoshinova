@@ -6,9 +6,7 @@ RUN yarn install --frozen-lockfile
 
 # Create base image for building Rust
 FROM rust:1.62-alpine AS rust-build-image
-RUN apk add --no-cache musl-dev git tzdata
-ARG TZ
-ENV TZ=$TZ
+RUN apk add --no-cache musl-dev git
 
 # Cache dependencies
 FROM rust-build-image AS rust-deps
@@ -59,7 +57,9 @@ RUN set -ex; \
 
 FROM alpine AS runner
 WORKDIR /app
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache ffmpeg tzdata
+ARG TZ
+ENV TZ ${TZ:-UTC}
 COPY --from=ytarchive-builder /src/ytarchive/ytarchive /usr/local/bin/ytarchive
 
 USER 1000
