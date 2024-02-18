@@ -60,6 +60,10 @@ WORKDIR /app
 RUN apk add --no-cache ffmpeg
 COPY --from=ytarchive-builder /src/ytarchive/ytarchive /usr/local/bin/ytarchive
 
+From alpine AS timezone
+RUN apk add --no-cache tzdata
+ENV TZ America/New_York
+
 USER 1000
 COPY --from=rust-builder --chown=1000:1000 \
   /src/target/x86_64-unknown-linux-musl/release/hoshinova \
