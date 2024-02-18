@@ -60,7 +60,7 @@ WORKDIR /app
 RUN apk add --no-cache ffmpeg
 COPY --from=ytarchive-builder /src/ytarchive/ytarchive /usr/local/bin/ytarchive
 
-From alpine AS timezone
+FROM alpine AS timezone
 RUN apk add --no-cache tzdata
 ENV TZ America/New_York
 
