@@ -82,7 +82,7 @@ async fn main() -> Result<()> {
         .format(|buf, record| {
             writeln!(buf,
                 "{} [{}] - {}",
-                Local::now().format("%Y-%m-%dT%H:%M:%S"),
+                Local::now().format("%Y-%m-%dT%H:%M:%S%z"),
                 record.level(),
                 record.args()
             )
