@@ -58,7 +58,7 @@ RUN set -ex; \
 FROM alpine AS runner
 WORKDIR /app
 RUN apk add --no-cache ffmpeg tzdata
-ENV TZ
+ENV TZ UTC
 COPY --from=ytarchive-builder /src/ytarchive/ytarchive /usr/local/bin/ytarchive
 
 USER 1000
