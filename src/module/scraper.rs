@@ -5,6 +5,7 @@ use async_trait::async_trait;
 use futures::stream::{self, Stream, StreamExt};
 use reqwest::Client;
 use serde::Deserialize;
+use log::*;
 use std::{
     collections::HashSet,
     sync::{Arc, Mutex},

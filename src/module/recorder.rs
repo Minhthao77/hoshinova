@@ -7,6 +7,7 @@ use chrono::{DateTime, Utc};
 use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Serialize;
+use log::*;
 use std::collections::HashSet;
 use std::{
     fs,

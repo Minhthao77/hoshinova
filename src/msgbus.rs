@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 use tokio::sync::mpsc;
+use log::*;
 
 #[derive(Debug, Clone)]
 enum BusMessage<T: Debug + Clone + Sync> {

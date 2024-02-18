@@ -2,6 +2,7 @@ use crate::module::TaskStatus;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
+use log::*;
 
 #[derive(Clone, TS, Serialize, Deserialize, Debug)]
 #[ts(export, export_to = "web/src/bindings/")]

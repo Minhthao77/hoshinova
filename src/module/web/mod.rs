@@ -9,6 +9,7 @@ use async_trait::async_trait;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::sync::Arc;
+use log::*;
 use tokio::{
     select,
     sync::{mpsc, RwLock},

@@ -7,6 +7,7 @@ use reqwest::Client;
 use serde::Serialize;
 use std::sync::Arc;
 use tokio::sync::{mpsc, RwLock};
+use log::*;
 
 pub struct Discord {
     config: Arc<RwLock<Config>>,

@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use lazy_static::lazy_static;
 use reqwest::Client;
+use log::*;
 
 pub async fn fetch_picture_url(client: Client, channel_id: &str) -> Result<String> {
     // Fetch the channel page
