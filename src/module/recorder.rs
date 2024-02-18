@@ -271,6 +271,11 @@ impl YTArchive {
         trace!("{} Stdout monitor quit: {:?}", task_name, r_stdout);
         trace!("{} Stderr monitor quit: {:?}", task_name, r_stderr);
 
+        // Remove video from active state if it failed
+        if status.state == YTAState::Errored {
+            active_ids.write().await.remove(&task.task.video_id);
+        }
+        
         // Skip moving files if it didn't finish
         if status.state != YTAState::Finished {
             return Ok(());
