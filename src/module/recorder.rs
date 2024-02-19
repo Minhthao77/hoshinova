@@ -30,7 +30,7 @@ pub struct YTArchive {
 }
 
 impl YTArchive {
-    async fn record(cfg: Config, task: Task, bus: &mut BusTx<Message>) -> Result<()> {
+    async fn record(cfg: Config, task: Task, bus: &mut BusTx<Message>, active_ids: &Arc<RwLock<HashSet<String>>>) -> Result<()> {
         let task_name = format!("[{}][{}][{}]", task.video_id, task.channel_name, task.title);
 
         // Ensure the working directory exists
@@ -184,6 +184,11 @@ impl YTArchive {
             // Stop when done
             if done.load(Ordering::Relaxed) {
                 break;
+            }
+            
+            let video_id = task.video_id.clone();
+            if status.state == YTAState::Errored {
+                active_ids.write().await.remove(&video_id);
             }
             
             if status.state == YTAState::Finished 
@@ -341,7 +346,7 @@ impl Module for YTArchive {
                     let video_id = task.task.video_id.clone();
                     active_ids.write().await.insert(video_id.clone());
 
-                    if let Err(e) = YTArchive::record(task.cfg, task.task, &mut task.tx).await {
+                    if let Err(e) = YTArchive::record(task.cfg, task.task, &mut task.tx, &self.active_ids).await {
                         active_ids.write().await.remove(&video_id);
                         error!("Failed to record task: {:?}", e);
                     };
