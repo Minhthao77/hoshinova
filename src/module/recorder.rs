@@ -346,7 +346,7 @@ impl Module for YTArchive {
                     let video_id = task.task.video_id.clone();
                     active_ids.write().await.insert(video_id.clone());
 
-                    if let Err(e) = YTArchive::record(task.cfg, task.task, &mut task.tx, &self.active_ids).await {
+                    if let Err(e) = YTArchive::record(task.cfg, task.task, &mut task.tx, &active_ids).await {
                         active_ids.write().await.remove(&video_id);
                         error!("Failed to record task: {:?}", e);
                     };
