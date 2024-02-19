@@ -185,12 +185,14 @@ impl YTArchive {
             if done.load(Ordering::Relaxed) {
                 break;
             }
-            
+
+            // remove video from active_ids list if it failed the recording
             let video_id = task.video_id.clone();
             if status.state == YTAState::Errored {
                 active_ids.write().await.remove(&video_id);
             }
-            
+
+            // Stop if the recording finished or errored
             if status.state == YTAState::Finished 
             || status.state == YTAState::Errored {
                 break;
