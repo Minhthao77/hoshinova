@@ -76,14 +76,12 @@ fn test_ytarchive(path: &str) -> Result<String> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Initialize logging
-    //env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
     let mut builder = Builder::new();
     // Set custom format
     builder.format(|buf, record| {
         writeln!(buf,
             "{} [{}] - {}",
-            chrono::Local::now().format("%Y-%m-%dT%H:%M:%S%z"),
+            Local::now().format("%Y-%m-%dT%H:%M:%S%z"),
             record.level(),
             record.args()
         )
