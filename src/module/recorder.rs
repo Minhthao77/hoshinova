@@ -186,12 +186,6 @@ impl YTArchive {
                 break;
             }
 
-            // remove video from active_ids list if it failed the recording
-            let video_id = task.video_id.clone();
-            if status.state == YTAState::Errored {
-                active_ids.write().await.remove(&video_id);
-            }
-
             // Stop if the recording finished or errored
             if status.state == YTAState::Finished 
             || status.state == YTAState::Errored {
@@ -247,6 +241,10 @@ impl YTArchive {
                 }
                 YTAState::Interrupted => {
                     info!("{} Recording failed: interrupted", task_name);
+                    // remove video from active_ids list if it failed the recording
+                    let video_id = task.video_id.clone();
+                    active_ids.write().await.remove(&video_id);
+                    
                     Some(Message::ToNotify(Notification {
                         task: task.clone(),
                         status: TaskStatus::Failed,
@@ -254,6 +252,10 @@ impl YTArchive {
                 }
                 YTAState::Errored => {
                     info!("{} Recording failed: errored", task_name);
+                    // remove video from active_ids list if it failed the recording
+                    let video_id = task.video_id.clone();
+                    active_ids.write().await.remove(&video_id);
+                    
                     Some(Message::ToNotify(Notification {
                         task: task.clone(),
                         status: TaskStatus::Failed,
