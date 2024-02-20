@@ -78,17 +78,26 @@ fn test_ytarchive(path: &str) -> Result<String> {
 async fn main() -> Result<()> {
     // Initialize logging
     //env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
-    Builder::new()
-        .format(|buf, record| {
-            writeln!(buf,
-                "{} [{}] - {}",
-                Local::now().format("%Y-%m-%dT%H:%M:%S%z"),
-                record.level(),
-                record.args()
-            )
-        })
-        .filter(None, LevelFilter::Info)
-        .init();
+    let mut builder = Builder::new();
+    // Set custom format
+    builder.format(|buf, record| {
+        writeln!(buf,
+            "{} [{}] - {}",
+            chrono::Local::now().format("%Y-%m-%dT%H:%M:%S%z"),
+            record.level(),
+            record.args()
+        )
+    });
+
+    // Set log level filter from environment variable or use default
+    if let Ok(filter) = std::env::var("RUST_LOG") {
+        builder.parse_filters(&filter);
+    } else {
+        builder.filter(None, LevelFilter::Info);
+    }
+
+    // Initialize logger
+    builder.init();
     
     info!("{}", APP_NAME);
     debug!("Git hash: {}", env!("GIT_HASH"));
